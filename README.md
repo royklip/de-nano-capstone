@@ -1,1 +1,1 @@
-# de-nano-capstone
+# Data Engineering Nano Degree Capstone Project
