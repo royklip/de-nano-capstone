@@ -2,6 +2,7 @@ import configparser
 from datetime import datetime
 from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
 from operators import (
     CleanDataOperator,
     CreateRedshiftClusterOperator,
@@ -65,8 +66,9 @@ with DAG('main_dag',
         db_port=DB_PORT
     )
 
-    create_redshift_connection_task = CreateRedshiftConnectionOperator(
-        task_id='create_redshift_connection',
+    create_postgres_connection_task = CreateRedshiftConnectionOperator(
+        task_id='create_postgres_connection',
+        conn_id = 'postgres_default',
         aws_credentials_id=aws_credentials,
         region=REGION,
         cluster_id=CLUSTER_IDENTIFIER,
@@ -81,6 +83,27 @@ with DAG('main_dag',
         sql='sql/create_tables.sql',
     )
 
+    create_redshift_connection_task = CreateRedshiftConnectionOperator(
+        task_id='create_redshift_connection',
+        conn_id = 'redshift_default',
+        aws_credentials_id=aws_credentials,
+        region=REGION,
+        cluster_id=CLUSTER_IDENTIFIER,
+        schema=DB_NAME,
+        login=DB_USER,
+        password=DB_PASSWORD,
+        port=DB_PORT
+    )
+
+    stage_airport_to_redshift_task = S3ToRedshiftOperator(
+        task_id='stage_airport_to_redshift',
+        s3_bucket=BUCKET,
+        s3_key=PATH_CLEAN + '/airport-codes_csv.csv',
+        schema='PUBLIC',
+        table='staging_airport',
+        copy_options=['csv'],
+    )
+
     delete_redshift_cluster_task = DeleteRedshiftClusterOperator(
         task_id='delete_redshift_cluster',
         aws_credentials_id=aws_credentials,
@@ -90,4 +113,5 @@ with DAG('main_dag',
         db_port=DB_PORT
     )
 
-    create_redshift_cluster_task >> create_redshift_connection_task >> create_tables_task >> delete_redshift_cluster_task
+    create_redshift_cluster_task >> create_postgres_connection_task >> create_tables_task
+    create_tables_task >> create_redshift_connection_task >> stage_airport_to_redshift_task >> delete_redshift_cluster_task

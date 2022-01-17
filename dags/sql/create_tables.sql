@@ -1,17 +1,17 @@
 CREATE TABLE IF NOT EXISTS public.staging_airport (
-    ident varchar(4) NOT NULL,
+    ident varchar(7) NOT NULL,
     "type" varchar(256) NOT NULL,
     "name" varchar(256) NOT NULL,
-    elevation_ft int NOT NULL,
-    continent varchar(2) NOT NULL,
-    iso_country varchar(2) NOT NULL,
-    iso_region varchar(5) NOT NULL,
-    municipality varchar(256) NOT NULL,
-    gps_code varchar(4) NOT NULL,
-    iata_code varchar(256),
-    local_code varchar(4) NOT NULL,
-	lattitude numeric(18,0) NOT NULL,
-	longitude numeric(18,0) NOT NULL
+    elevation_ft int,
+    continent varchar(2),
+    iso_country varchar(2),
+    iso_region varchar(7),
+    municipality varchar(256),
+    gps_code varchar(4),
+    iata_code varchar(3),
+    local_code varchar(7),
+	lattitude numeric(18,0),
+	longitude numeric(18,0)
 );
 
 CREATE TABLE IF NOT EXISTS public.staging_temperature (
