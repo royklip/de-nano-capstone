@@ -11,6 +11,7 @@ class CreateRedshiftConnectionOperator(BaseOperator):
 
  
     def __init__(self,
+            conn_id: str,
             aws_credentials_id: str,
             region: str,
             cluster_id: str,
@@ -23,6 +24,7 @@ class CreateRedshiftConnectionOperator(BaseOperator):
         ):
         super().__init__(*args, **kwargs)
 
+        self.conn_id = conn_id
         self.aws_credentials_id = aws_credentials_id
         self.region = region
         self.cluster_id = cluster_id
@@ -43,7 +45,7 @@ class CreateRedshiftConnectionOperator(BaseOperator):
         self.log.info(f"Found the Redshift DB host address on {db_host}")
 
         session = settings.Session()
-        conn_id = 'postgres_default'
+        conn_id = self.conn_id
 
         self.log.info(f"Check if connection {conn_id} already exists")
         conn_name = session.query(Connection).filter(Connection.conn_id == conn_id).first()
