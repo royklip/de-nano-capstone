@@ -35,7 +35,11 @@ with DAG('cleaning_dag',
         input_path=PATH_RAW,
         output_path=PATH_CLEAN,
         file=file_airport,
-        cleaning_function=DataCleaner.clean_airport_data
+        cleaning_function=DataCleaner.clean_airport_data,
+        load_options={
+            'keep_default_na': False,
+            'na_values': ['', '-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A','N/A', '#NA', 'NULL', 'NaN', '-NaN', 'nan', '-nan']
+        }
     )
 
     clean_temperature_data_task = CleanDataOperator(

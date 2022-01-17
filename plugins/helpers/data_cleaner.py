@@ -1,9 +1,6 @@
 class DataCleaner:
     def clean_airport_data(df):
-        # Replace continent NaNs with "NA"
-        df.loc[df['continent'].isna(), 'continent'] = 'NA'
-
-        # Also split the coordinates in latitude and longitude
+        # Split the coordinates in latitude and longitude
         df[['latitude', 'longitude']] = df['coordinates'].str.split(', ', expand=True)
         df.drop('coordinates', axis=1, inplace=True)
 
