@@ -1,5 +1,10 @@
 class DataCleaner:
     def clean_airport_data(df):
+        # Set NaNs to zero
+        df.loc[df['elevation_ft'].isna(), 'elevation_ft'] = 0
+        df = df.astype({'elevation_ft': 'int'})
+
+
         # Split the coordinates in latitude and longitude
         df[['latitude', 'longitude']] = df['coordinates'].str.split(', ', expand=True)
         df.drop('coordinates', axis=1, inplace=True)
