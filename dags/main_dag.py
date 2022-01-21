@@ -90,6 +90,26 @@ with DAG('main_dag',
         copy_options=['csv', 'IGNOREHEADER 1']
     )
 
+    stage_temperature_to_redshift_task = S3ToRedshiftOperator(
+        task_id='stage_temperature_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=PATH_CLEAN + '/GlobalLandTemperaturesByCity.csv',
+        schema='PUBLIC',
+        table='staging_temperature',
+        copy_options=['csv', 'IGNOREHEADER 1']
+    )
+
+    stage_cities_to_redshift_task = S3ToRedshiftOperator(
+        task_id='stage_cities_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=PATH_CLEAN + '/us-cities-demographics.csv',
+        schema='PUBLIC',
+        table='staging_cities',
+        copy_options=['csv', 'IGNOREHEADER 1']
+    )
+
     delete_redshift_cluster_task = DeleteRedshiftClusterOperator(
         task_id='delete_redshift_cluster',
         aws_credentials_id=aws_credentials,
@@ -100,4 +120,4 @@ with DAG('main_dag',
     )
 
     create_redshift_cluster_task >> create_redshift_connection_task >> create_tables_task
-    create_tables_task >> stage_airport_to_redshift_task >> delete_redshift_cluster_task
+    create_tables_task >> [stage_airport_to_redshift_task, stage_temperature_to_redshift_task, stage_cities_to_redshift_task] >> delete_redshift_cluster_task
