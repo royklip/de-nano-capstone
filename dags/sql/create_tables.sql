@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS public.staging_airport;
 CREATE TABLE IF NOT EXISTS public.staging_airport (
     ident varchar(7) NOT NULL,
     "type" varchar(256) NOT NULL,
@@ -14,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.staging_airport (
 	longitude numeric(18,0)
 );
 
+DROP TABLE IF EXISTS public.staging_temperature;
 CREATE TABLE IF NOT EXISTS public.staging_temperature (
     dt date NOT NULL,
     AverageTemperature numeric(18,3) NOT NULL,
@@ -24,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.staging_temperature (
     Longitude varchar(256) NOT NULL
 );
 
+DROP TABLE IF EXISTS public.staging_cities;
 CREATE TABLE IF NOT EXISTS public.staging_cities (
     City varchar(256) NOT NULL,
     "State" varchar(256) NOT NULL,
