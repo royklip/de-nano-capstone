@@ -61,5 +61,6 @@ with DAG('cleaning_dag',
         input_path=PATH_RAW,
         output_path=PATH_CLEAN,
         file=file_cities,
+        cleaning_function=DataCleaner.clean_cities_data,
         load_options={'delimiter': ';'}
     )
