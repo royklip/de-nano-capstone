@@ -11,12 +11,14 @@ class CapstonePlugin(AirflowPlugin):
         operators.CleanDataOperator,
         operators.CreateRedshiftClusterOperator,
         operators.CreateRedshiftConnectionOperator,
-        operators.DeleteRedshiftClusterOperator
+        operators.DeleteRedshiftClusterOperator,
+        operators.CreateEmrClusterOperator,
     ]
     helpers = [
         helpers.AwsService,
         helpers.Redshift,
         helpers.S3,
+        helpers.Emr,
         helpers.DataCleaner,
         helpers.SqlQueries
     ]

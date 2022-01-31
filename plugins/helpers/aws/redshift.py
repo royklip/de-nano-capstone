@@ -150,18 +150,6 @@ class Redshift(AwsService):
         }
 
 
-    # def _security_group_permission_exists(self, permissions: list, db_port: int) -> bool:
-    #     """ Check if the access port permission already exists. """
-    #     for permission in permissions:
-    #         if permission['FromPort'] == db_port and \
-    #             permission['ToPort'] == db_port and \
-    #             permission['IpProtocol'] == 'tcp' and \
-    #             permission['IpRanges'][0]['CidrIp'] == '0.0.0.0/0':
-    #             return True
-
-    #     return False
-
-
     def delete_cluster(self, cluster_id: str) -> None:
         """ Delete redshift cluster. """
         try:

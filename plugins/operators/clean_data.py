@@ -43,7 +43,7 @@ class CleanDataOperator(BaseOperator):
         df = pd.read_csv(s3.load_data(self.input_path, self.file), **self.load_options)
 
         self.log.info("Clean the data")
-        # If there is not cleaning function, simply copy the dataframe
+        # If there is no cleaning function, simply copy the dataframe
         if self.cleaning_function == None:
             df_clean = df.copy()
         else:
