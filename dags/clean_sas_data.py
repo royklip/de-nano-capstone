@@ -24,7 +24,7 @@ PATH_SCRIPTS = config.get('S3', 'PATH_SCRIPTS')
 
 JOB_FLOW_OVERRIDES = {
     'Name': 'RoyUdacityNanodegree',
-    'ReleaseLabel': 'emr-5.29.0',
+    'ReleaseLabel': 'emr-6.5.0',
     'Applications': [{'Name': 'Spark'}, {'Name': 'Hadoop'}],
     'Configurations': [
         {
@@ -70,6 +70,8 @@ SPARK_STEPS = [
                 'spark-submit',
                 '--deploy-mode',
                 'client',
+                '--packages',
+                'saurfang:spark-sas7bdat:3.0.0-s_2.12,org.apache.hadoop:hadoop-aws:3.3.1',
                 f's3://{BUCKET}/{PATH_SCRIPTS}/clean_immigration_data.py',
             ],
         },
