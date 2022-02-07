@@ -22,7 +22,7 @@ file_airport = 'airport-codes_csv.csv'
 file_temp = 'GlobalLandTemperaturesByCity.csv'
 file_cities = 'us-cities-demographics.csv'
 
-with DAG('cleaning_dag',
+with DAG('clean_data',
     start_date=datetime.utcnow(),
     description='Clean the CSV data on S3'
 ) as dag:

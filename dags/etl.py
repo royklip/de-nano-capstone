@@ -41,7 +41,7 @@ file_airport = 'airport-codes_csv.csv'
 file_temp = 'GlobalLandTemperaturesByCity.csv'
 file_cities = 'us-cities-demographics.csv'
 
-with DAG('main_dag',
+with DAG('etl',
     start_date=datetime.utcnow(),
     description='Create redshift cluster, create redshift tables, move data from S3 to redshift staging tables, \
         perform data wrangling and store them in the star schema tables'
