@@ -26,7 +26,7 @@ def main():
     df_immigration = df_immigration.withColumn('arrdate', sas_to_dt('arrdate'))
     df_immigration = df_immigration.withColumn('depdate', sas_to_dt('depdate'))
 
-    # TODO save parquet files on S3
+    # Save data to parquet files on S3
     df_immigration.write.mode('overwrite').parquet(f's3a://{BUCKET}/{PATH_CLEAN}/immigration.parquet')
 
 

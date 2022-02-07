@@ -1,23 +1,3 @@
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-"""
-This is an example dag for a AWS EMR Pipeline with auto steps.
-"""
 from datetime import datetime
 import configparser
 
@@ -28,9 +8,7 @@ from airflow.providers.amazon.aws.operators.emr_add_steps import EmrAddStepsOper
 from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import EmrTerminateJobFlowOperator
 from airflow.providers.amazon.aws.sensors.emr_step import EmrStepSensor
 from airflow import DAG
-from operators import (
-    CreateEmrConnectionOperator
-)
+from operators import CreateEmrConnectionOperator
 
 
 config = configparser.ConfigParser()
@@ -45,7 +23,7 @@ PATH_CLEAN = config.get('S3', 'PATH_CLEAN')
 PATH_SCRIPTS = config.get('S3', 'PATH_SCRIPTS')
 
 JOB_FLOW_OVERRIDES = {
-    'Name': 'CreateEmrCluster',
+    'Name': 'RoyUdacityNanodegree',
     'ReleaseLabel': 'emr-5.29.0',
     'Applications': [{'Name': 'Spark'}, {'Name': 'Hadoop'}],
     'Configurations': [
@@ -92,18 +70,19 @@ SPARK_STEPS = [
                 'spark-submit',
                 '--deploy-mode',
                 'client',
-                f's3://{BUCKET}/{PATH_SCRIPTS}/test.py',
+                f's3://{BUCKET}/{PATH_SCRIPTS}/clean_immigration_data.py',
             ],
         },
     }
 ]
 
-# helper function
+
 def _scripts_to_s3(filename, key, bucket_name=BUCKET):
     s3 = S3Hook()
     s3.load_file(filename=filename, bucket_name=bucket_name, replace=True, key=f'{PATH_SCRIPTS}/{key}')
 
-with DAG('emr',
+
+with DAG('clean_sas_data',
     start_date=datetime.utcnow(),
     description='Test'
 ) as dag:
@@ -111,7 +90,7 @@ with DAG('emr',
     script_to_s3 = PythonOperator(
         task_id='script_to_s3',
         python_callable=_scripts_to_s3,
-        op_kwargs={'filename': './dags/scripts/test.py', 'key': 'test.py',},
+        op_kwargs={'filename': './dags/scripts/clean_immigration_data.py', 'key': 'clean_immigration_data.py',},
     )
 
     create_emr_connection = CreateEmrConnectionOperator(
