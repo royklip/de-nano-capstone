@@ -2,12 +2,14 @@ import pandas as pd
 
 
 def _float_to_int(column: pd.Series) -> pd.Series:
-        column[column.isna()] = 0
-        return column.astype(int)
+    """ Converts a float column to an int one. """
+    column[column.isna()] = 0
+    return column.astype(int)
 
 
 class DataCleaner:
     def clean_airport_data(df: pd.DataFrame) -> pd.DataFrame:
+        """ Cleans the airport dataframe. """
         # Convert elevation float to int
         df['elevation_ft'] = _float_to_int(df['elevation_ft'])
 
@@ -19,6 +21,7 @@ class DataCleaner:
 
 
     def clean_temperature_data(df: pd.DataFrame) -> pd.DataFrame:
+        """ Cleans the temperature dataframe. """
         # Filter out the NaN values for temperature
         df_no_nan = df[~df['AverageTemperature'].isna()]
 
@@ -29,6 +32,7 @@ class DataCleaner:
 
 
     def clean_cities_data(df: pd.DataFrame) -> pd.DataFrame:
+        """ Cleans the cities dataframe. """
         # Convert population floats to ints
         df['Male Population'] = _float_to_int(df['Male Population'])
         df['Female Population'] = _float_to_int(df['Female Population'])

@@ -4,6 +4,7 @@ from airflow.models import Connection
 
 class ConnectionCreator:
     def create_connection(conn_id, **kwargs):
+        """ Create an airflow connection and adds it to the session. """
         session = settings.Session()
         conn_name = session.query(Connection).filter(Connection.conn_id == conn_id).first()
         if str(conn_name) != str(conn_id):
