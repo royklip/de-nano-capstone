@@ -19,6 +19,5 @@ class CapstonePlugin(AirflowPlugin):
         helpers.Redshift,
         helpers.S3,
         helpers.DataCleaner,
-        helpers.SqlQueries,
-        helpers.ConnectionCreator
+        helpers.SqlQueries
     ]

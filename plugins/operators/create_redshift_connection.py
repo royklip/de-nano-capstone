@@ -1,8 +1,9 @@
 from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
 from airflow.models import BaseOperator
+from airflow.models import Connection
+from airflow.utils.db import merge_conn
 from helpers import (
-    Redshift,
-    ConnectionCreator
+    Redshift
 )
 
 
@@ -44,10 +45,12 @@ class CreateRedshiftConnectionOperator(BaseOperator):
         self.log.info(f"Found the Redshift DB host address on {db_host}")
 
         self.log.info(f"Create connection {self.conn_id}")
-        ConnectionCreator.create_connection(self.conn_id, kwargs={
-            'host': db_host,
-            'schema': self.schema,
-            'login': self.login,
-            'password': self.password,
-            'port': self.port
-        })
+        merge_conn(Connection(
+                conn_id=self.conn_id,
+                conn_type='postgres',
+                host=db_host,
+                schema=self.schema,
+                login=self.login,
+                password=self.password,
+                port=self.port
+            ))

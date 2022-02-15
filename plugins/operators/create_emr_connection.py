@@ -1,5 +1,6 @@
 from airflow.models import BaseOperator
-from helpers import ConnectionCreator
+from airflow.models import Connection
+from airflow.utils.db import merge_conn
 
 
 class CreateEmrConnectionOperator(BaseOperator):
@@ -17,4 +18,7 @@ class CreateEmrConnectionOperator(BaseOperator):
 
     def execute(self, context):
         self.log.info(f"Create connection {self.conn_id}")
-        ConnectionCreator.create_connection(self.conn_id)
+        merge_conn(Connection(
+                conn_id=self.conn_id,
+                conn_type='emr'
+            ))
