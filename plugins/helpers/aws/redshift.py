@@ -115,14 +115,13 @@ class Redshift(AwsService):
         try:
             defaultSg = self._get_default_sg(cluster_id)
             ingress = self._get_ingress(defaultSg, db_port)
-
-            # if not self._security_group_permission_exists(defaultSg.ip_permissions, db_port):
             defaultSg.authorize_ingress(**ingress)
         except Exception as e:
             print(e)
 
 
     def delete_access_port(self, cluster_id: str, db_port: int):
+        """ Remove open TCP port to cluster. """
         try:
             defaultSg = self._get_default_sg(cluster_id)
             ingress = self._get_ingress(defaultSg, db_port)
@@ -132,15 +131,17 @@ class Redshift(AwsService):
 
 
     def _get_default_sg(self, cluster_id: str):
+        """ Get default security group """
         cluster_props = self.get_cluster_props(cluster_id)
         if cluster_props['ClusterStatus'] != 'available':
             raise Exception('Cluster is not available (yet)')
 
-        vpc = self.ec2.Vpc(id=cluster_props['VpcId'])
-        return list(vpc.security_groups.all())[0]
+        vpc_sg = cluster_props['VpcSecurityGroups'][0]
+        return self.ec2.SecurityGroup(id=vpc_sg['VpcSecurityGroupId'])
 
 
     def _get_ingress(self, defaultSg, db_port: int):
+        """ Get ingress based on default security group and DB port """
         return {
             'GroupName': defaultSg.group_name,
             'CidrIp': '0.0.0.0/0',
