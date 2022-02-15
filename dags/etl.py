@@ -110,6 +110,16 @@ with DAG('etl',
         copy_options=['csv', 'IGNOREHEADER 1']
     )
 
+    stage_immigration_to_redshift_task = S3ToRedshiftOperator(
+        task_id='stage_immigration_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=PATH_CLEAN + '/immigration.parquet',
+        schema='PUBLIC',
+        table='staging_immigration',
+        copy_options=['FORMAT AS PARQUET']
+    )
+
     delete_redshift_cluster_task = DeleteRedshiftClusterOperator(
         task_id='delete_redshift_cluster',
         aws_credentials_id=aws_credentials,
@@ -120,4 +130,4 @@ with DAG('etl',
     )
 
     create_redshift_cluster_task >> create_redshift_connection_task >> create_tables_task
-    create_tables_task >> [stage_airport_to_redshift_task, stage_temperature_to_redshift_task, stage_cities_to_redshift_task] >> delete_redshift_cluster_task
+    create_tables_task >> [stage_airport_to_redshift_task, stage_temperature_to_redshift_task, stage_cities_to_redshift_task, stage_immigration_to_redshift_task] >> delete_redshift_cluster_task
