@@ -73,3 +73,33 @@ CREATE TABLE IF NOT EXISTS public.staging_immigration (
     fltno varchar(256),
     visatype varchar(256)
 );
+
+DROP TABLE IF EXISTS public.i94addrl;
+CREATE TABLE IF NOT EXISTS public.i94addrl (
+    code varchar(2),
+    "name" varchar(256)
+);
+
+DROP TABLE IF EXISTS public.i94cntyl;
+CREATE TABLE IF NOT EXISTS public.i94cntyl (
+    code int,
+    "name" varchar(256)
+);
+
+DROP TABLE IF EXISTS public.i94model;
+CREATE TABLE IF NOT EXISTS public.i94model (
+    code int,
+    "name" varchar(256)
+);
+
+DROP TABLE IF EXISTS public.i94prtl;
+CREATE TABLE IF NOT EXISTS public.i94prtl (
+    code varchar(3),
+    "name" varchar(256)
+);
+
+DROP TABLE IF EXISTS public.i94visa;
+CREATE TABLE IF NOT EXISTS public.i94visa (
+    code int,
+    "name" varchar(256)
+);

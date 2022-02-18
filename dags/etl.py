@@ -84,7 +84,7 @@ with DAG('etl',
         task_id='stage_airport_to_redshift',
         redshift_conn_id='redshift',
         s3_bucket=BUCKET,
-        s3_key=PATH_CLEAN + '/airport-codes_csv.csv',
+        s3_key=f'{PATH_CLEAN}/airport-codes_csv.csv',
         schema='PUBLIC',
         table='staging_airport',
         copy_options=['csv', 'IGNOREHEADER 1']
@@ -94,7 +94,7 @@ with DAG('etl',
         task_id='stage_temperature_to_redshift',
         redshift_conn_id='redshift',
         s3_bucket=BUCKET,
-        s3_key=PATH_CLEAN + '/GlobalLandTemperaturesByCity.csv',
+        s3_key=f'{PATH_CLEAN}/GlobalLandTemperaturesByCity.csv',
         schema='PUBLIC',
         table='staging_temperature',
         copy_options=['csv', 'IGNOREHEADER 1']
@@ -104,7 +104,7 @@ with DAG('etl',
         task_id='stage_cities_to_redshift',
         redshift_conn_id='redshift',
         s3_bucket=BUCKET,
-        s3_key=PATH_CLEAN + '/us-cities-demographics.csv',
+        s3_key=f'{PATH_CLEAN}/us-cities-demographics.csv',
         schema='PUBLIC',
         table='staging_cities',
         copy_options=['csv', 'IGNOREHEADER 1']
@@ -114,11 +114,24 @@ with DAG('etl',
         task_id='stage_immigration_to_redshift',
         redshift_conn_id='redshift',
         s3_bucket=BUCKET,
-        s3_key=PATH_CLEAN + '/immigration.parquet',
+        s3_key=f'{PATH_CLEAN}/immigration.parquet',
         schema='PUBLIC',
         table='staging_immigration',
         copy_options=['FORMAT AS PARQUET']
     )
+
+    for txt_file in ['i94addrl', 'i94cntyl', 'i94model', 'i94prtl', 'i94visa']:
+        txt_to_redshift_task = S3ToRedshiftOperator(
+            task_id=f'{txt_file}_to_redshift',
+            redshift_conn_id='redshift',
+            s3_bucket=BUCKET,
+            s3_key=f'{PATH_CLEAN}/{txt_file}.csv',
+            schema='PUBLIC',
+            table=txt_file,
+            copy_options=['csv', 'IGNOREHEADER 1']
+        )
+
+        create_tables_task >> txt_to_redshift_task
 
     delete_redshift_cluster_task = DeleteRedshiftClusterOperator(
         task_id='delete_redshift_cluster',
