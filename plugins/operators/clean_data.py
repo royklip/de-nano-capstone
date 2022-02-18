@@ -13,9 +13,8 @@ class CleanDataOperator(BaseOperator):
             aws_credentials_id: str, 
             region: str,
             bucket: str,
-            input_path: str,
-            output_path: str,
-            file: str = '',
+            input_file: str,
+            output_file: str,
             cleaning_function: Callable[[pd.DataFrame], pd.DataFrame] = None,
             load_options: Dict[str, str] = {},
             *args,
@@ -26,9 +25,8 @@ class CleanDataOperator(BaseOperator):
         self.aws_credentials_id = aws_credentials_id
         self.region = region
         self.bucket = bucket
-        self.input_path = input_path
-        self.output_path = output_path
-        self.file = file
+        self.input_file = input_file
+        self.output_file = output_file
         self.cleaning_function = cleaning_function
         self.load_options = load_options
 
@@ -39,8 +37,8 @@ class CleanDataOperator(BaseOperator):
 
         s3 = S3(credentials, self.region, self.bucket)
 
-        self.log.info(f"Load {self.file} from S3 with path {self.input_path}")
-        df = pd.read_csv(s3.load_data(self.input_path, self.file), **self.load_options)
+        self.log.info(f"Load {self.input_file} from S3")
+        df = pd.read_csv(s3.load_data(self.input_file), **self.load_options)
 
         self.log.info("Clean the data")
         # If there is no cleaning function, simply copy the dataframe
@@ -49,5 +47,5 @@ class CleanDataOperator(BaseOperator):
         else:
             df_clean = self.cleaning_function(df)
 
-        self.log.info(f"Store clean data back on S3 on path {self.output_path}")
-        s3.store_data(self.output_path, self.file, df_clean)
+        self.log.info(f"Store {self.output_file} on S3")
+        s3.store_data(self.output_file, df_clean)

@@ -15,16 +15,16 @@ class S3(AwsService):
         self.bucket = bucket
 
 
-    def load_data(self, path: str, file_name: str):
+    def load_data(self, key: str):
         """ Load data from S3 """
-        return self.s3.get_object(Bucket=self.bucket, Key=f'{path}/{file_name}')['Body']
+        return self.s3.get_object(Bucket=self.bucket, Key=key)['Body']
 
     
-    def store_data(self, path: str, file_name: str, df: pd.DataFrame) -> None:
+    def store_data(self, key: str, df: pd.DataFrame) -> None:
         """ Store data on S3 """
         with io.StringIO() as csv_buffer:
             df.to_csv(csv_buffer, index=False)
-            response = self.s3.put_object(Bucket=self.bucket, Key=f'{path}/{file_name}', Body=csv_buffer.getvalue())
+            response = self.s3.put_object(Bucket=self.bucket, Key=key, Body=csv_buffer.getvalue())
 
             status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
             if status == 200:
