@@ -22,6 +22,14 @@ file_airport = 'airport-codes_csv.csv'
 file_temp = 'GlobalLandTemperaturesByCity.csv'
 file_cities = 'us-cities-demographics.csv'
 
+txt_load_options = {
+    'header': None, 
+    'sep': '=', 
+    'names': ['code', 'name'], 
+    'quotechar': '\''
+}
+
+
 with DAG('clean_csv_data',
     start_date=datetime.utcnow(),
     description='Clean the CSV data on S3'
@@ -32,9 +40,8 @@ with DAG('clean_csv_data',
         aws_credentials_id=aws_credentials,
         region=REGION,
         bucket=BUCKET,
-        input_path=PATH_RAW,
-        output_path=PATH_CLEAN,
-        file=file_airport,
+        input_file=f'{PATH_RAW}/{file_airport}',
+        output_file=f'{PATH_CLEAN}/{file_airport}',
         cleaning_function=DataCleaner.clean_airport_data,
         load_options={
             'keep_default_na': False,
@@ -47,9 +54,8 @@ with DAG('clean_csv_data',
         aws_credentials_id=aws_credentials,
         region=REGION,
         bucket=BUCKET,
-        input_path=PATH_RAW,
-        output_path=PATH_CLEAN,
-        file=file_temp,
+        input_file=f'{PATH_RAW}/{file_temp}',
+        output_file=f'{PATH_CLEAN}/{file_temp}',
         cleaning_function=DataCleaner.clean_temperature_data
     )
 
@@ -58,9 +64,19 @@ with DAG('clean_csv_data',
         aws_credentials_id=aws_credentials,
         region=REGION,
         bucket=BUCKET,
-        input_path=PATH_RAW,
-        output_path=PATH_CLEAN,
-        file=file_cities,
+        input_file=f'{PATH_RAW}/{file_cities}',
+        output_file=f'{PATH_CLEAN}/{file_cities}',
         cleaning_function=DataCleaner.clean_cities_data,
         load_options={'delimiter': ';'}
     )
+
+    for txt_file in ['i94addrl', 'i94cntyl', 'i94model', 'i94prtl', 'i94visa']:
+        clean_txt_data_task = CleanDataOperator(
+            task_id=f'clean_{txt_file}_data',
+            aws_credentials_id=aws_credentials,
+            region=REGION,
+            bucket=BUCKET,
+            input_file=f'{PATH_RAW}/{txt_file}.txt',
+            output_file=f'{PATH_CLEAN}/{txt_file}.csv',
+            load_options=txt_load_options
+        )
