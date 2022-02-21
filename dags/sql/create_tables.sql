@@ -74,32 +74,33 @@ CREATE TABLE IF NOT EXISTS public.staging_immigration (
     visatype varchar(256)
 );
 
-DROP TABLE IF EXISTS public.i94addrl;
-CREATE TABLE IF NOT EXISTS public.i94addrl (
+DROP TABLE IF EXISTS public.state_codes;
+CREATE TABLE IF NOT EXISTS public.state_codes (
     code varchar(2),
     "name" varchar(256)
 );
 
-DROP TABLE IF EXISTS public.i94cntyl;
-CREATE TABLE IF NOT EXISTS public.i94cntyl (
+DROP TABLE IF EXISTS public.country_codes;
+CREATE TABLE IF NOT EXISTS public.country_codes (
     code int,
     "name" varchar(256)
 );
 
-DROP TABLE IF EXISTS public.i94model;
-CREATE TABLE IF NOT EXISTS public.i94model (
+DROP TABLE IF EXISTS public.mode_codes;
+CREATE TABLE IF NOT EXISTS public.mode_codes (
     code int,
     "name" varchar(256)
 );
 
-DROP TABLE IF EXISTS public.i94prtl;
-CREATE TABLE IF NOT EXISTS public.i94prtl (
+DROP TABLE IF EXISTS public.airport_codes;
+CREATE TABLE IF NOT EXISTS public.airport_codes (
     code varchar(3),
-    "name" varchar(256)
+    "name" varchar(256),
+    "state" varchar(2)
 );
 
-DROP TABLE IF EXISTS public.i94visa;
-CREATE TABLE IF NOT EXISTS public.i94visa (
+DROP TABLE IF EXISTS public.visa_codes;
+CREATE TABLE IF NOT EXISTS public.visa_codes (
     code int,
     "name" varchar(256)
 );

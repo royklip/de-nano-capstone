@@ -120,18 +120,55 @@ with DAG('etl',
         copy_options=['FORMAT AS PARQUET']
     )
 
-    for txt_file in ['i94addrl', 'i94cntyl', 'i94model', 'i94prtl', 'i94visa']:
-        txt_to_redshift_task = S3ToRedshiftOperator(
-            task_id=f'{txt_file}_to_redshift',
-            redshift_conn_id='redshift',
-            s3_bucket=BUCKET,
-            s3_key=f'{PATH_CLEAN}/{txt_file}.csv',
-            schema='PUBLIC',
-            table=txt_file,
-            copy_options=['csv', 'IGNOREHEADER 1']
-        )
+    i94addrl_to_redshift_task = S3ToRedshiftOperator(
+        task_id='i94addrl_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=f'{PATH_CLEAN}/i94addrl.csv',
+        schema='PUBLIC',
+        table='state_codes',
+        copy_options=['csv', 'IGNOREHEADER 1']
+    )
 
-        create_tables_task >> txt_to_redshift_task
+    i94cntyl_to_redshift_task = S3ToRedshiftOperator(
+        task_id='i94cntyl_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=f'{PATH_CLEAN}/i94cntyl.csv',
+        schema='PUBLIC',
+        table='country_codes',
+        copy_options=['csv', 'IGNOREHEADER 1']
+    )
+
+    i94model_to_redshift_task = S3ToRedshiftOperator(
+        task_id='i94model_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=f'{PATH_CLEAN}/i94model.csv',
+        schema='PUBLIC',
+        table='mode_codes',
+        copy_options=['csv', 'IGNOREHEADER 1']
+    )
+
+    i94prtl_to_redshift_task = S3ToRedshiftOperator(
+        task_id='i94prtl_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=f'{PATH_CLEAN}/i94prtl.csv',
+        schema='PUBLIC',
+        table='airport_codes',
+        copy_options=['csv', 'IGNOREHEADER 1']
+    )
+
+    i94visa_to_redshift_task = S3ToRedshiftOperator(
+        task_id='i94visa_to_redshift',
+        redshift_conn_id='redshift',
+        s3_bucket=BUCKET,
+        s3_key=f'{PATH_CLEAN}/i94visa.csv',
+        schema='PUBLIC',
+        table='visa_codes',
+        copy_options=['csv', 'IGNOREHEADER 1']
+    )
 
     delete_redshift_cluster_task = DeleteRedshiftClusterOperator(
         task_id='delete_redshift_cluster',
@@ -143,4 +180,14 @@ with DAG('etl',
     )
 
     create_redshift_cluster_task >> create_redshift_connection_task >> create_tables_task
-    create_tables_task >> [stage_airport_to_redshift_task, stage_temperature_to_redshift_task, stage_cities_to_redshift_task, stage_immigration_to_redshift_task] >> delete_redshift_cluster_task
+    create_tables_task >> [
+        stage_airport_to_redshift_task, 
+        stage_temperature_to_redshift_task, 
+        stage_cities_to_redshift_task, 
+        stage_immigration_to_redshift_task,
+        i94addrl_to_redshift_task,
+        i94cntyl_to_redshift_task,
+        i94model_to_redshift_task,
+        i94prtl_to_redshift_task,
+        i94visa_to_redshift_task
+    ] >> delete_redshift_cluster_task
