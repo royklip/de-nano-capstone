@@ -70,7 +70,18 @@ with DAG('clean_csv_data',
         load_options={'delimiter': ';'}
     )
 
-    for txt_file in ['i94addrl', 'i94cntyl', 'i94model', 'i94prtl', 'i94visa']:
+    clean_i94prtl_data_task = CleanDataOperator(
+        task_id='clean_i94prtl_data',
+        aws_credentials_id=aws_credentials,
+        region=REGION,
+        bucket=BUCKET,
+        input_file=f'{PATH_RAW}/i94prtl.txt',
+        output_file=f'{PATH_CLEAN}/i94prtl.csv',
+        cleaning_function=DataCleaner.clean_i94prtl_data,
+        load_options=txt_load_options
+    )
+
+    for txt_file in ['i94addrl', 'i94cntyl', 'i94model', 'i94visa']:
         clean_txt_data_task = CleanDataOperator(
             task_id=f'clean_{txt_file}_data',
             aws_credentials_id=aws_credentials,
