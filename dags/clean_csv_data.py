@@ -19,7 +19,6 @@ PATH_CLEAN = config.get('S3', 'PATH_CLEAN')
 
 # Data files
 file_airport = 'airport-codes_csv.csv'
-file_temp = 'GlobalLandTemperaturesByCity.csv'
 file_cities = 'us-cities-demographics.csv'
 
 txt_load_options = {
@@ -47,16 +46,6 @@ with DAG('clean_csv_data',
             'keep_default_na': False,
             'na_values': ['', '-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A','N/A', '#NA', 'NULL', 'NaN', '-NaN', 'nan', '-nan']
         }
-    )
-
-    clean_temperature_data_task = CleanDataOperator(
-        task_id='clean_temperature_data',
-        aws_credentials_id=aws_credentials,
-        region=REGION,
-        bucket=BUCKET,
-        input_file=f'{PATH_RAW}/{file_temp}',
-        output_file=f'{PATH_CLEAN}/{file_temp}',
-        cleaning_function=DataCleaner.clean_temperature_data
     )
 
     clean_cities_data_task = CleanDataOperator(

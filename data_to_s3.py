@@ -21,7 +21,6 @@ s3 = boto3.client('s3',
 # Upload the data to S3
 file_paths = [
     '../../data/18-83510-I94-Data-2016/i94_apr16_sub.sas7bdat',
-    '../../data2/GlobalLandTemperaturesByCity.csv',
     'data/airport-codes_csv.csv',
     'data/immigration_data_sample.csv',
     'data/us-cities-demographics.csv'

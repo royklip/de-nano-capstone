@@ -16,17 +16,6 @@ CREATE TABLE IF NOT EXISTS public.staging_airport (
     "state" varchar(2)
 );
 
-DROP TABLE IF EXISTS public.staging_temperature;
-CREATE TABLE IF NOT EXISTS public.staging_temperature (
-    dt date NOT NULL,
-    AverageTemperature numeric(18,3) NOT NULL,
-    AverageTemperatureUncertainty numeric(18,3) NOT NULL,
-    City varchar(256) NOT NULL,
-    Country varchar(256) NOT NULL,
-    Latitude varchar(256) NOT NULL,
-    Longitude varchar(256) NOT NULL
-);
-
 DROP TABLE IF EXISTS public.staging_cities;
 CREATE TABLE IF NOT EXISTS public.staging_cities (
     City varchar(256) NOT NULL,

@@ -38,7 +38,6 @@ PATH_CLEAN = config.get('S3', 'PATH_CLEAN')
 
 # Data files
 file_airport = 'airport-codes_csv.csv'
-file_temp = 'GlobalLandTemperaturesByCity.csv'
 file_cities = 'us-cities-demographics.csv'
 
 with DAG('etl',
@@ -87,16 +86,6 @@ with DAG('etl',
         s3_key=f'{PATH_CLEAN}/airport-codes_csv.csv',
         schema='PUBLIC',
         table='staging_airport',
-        copy_options=['csv', 'IGNOREHEADER 1']
-    )
-
-    stage_temperature_to_redshift_task = S3ToRedshiftOperator(
-        task_id='stage_temperature_to_redshift',
-        redshift_conn_id='redshift',
-        s3_bucket=BUCKET,
-        s3_key=f'{PATH_CLEAN}/GlobalLandTemperaturesByCity.csv',
-        schema='PUBLIC',
-        table='staging_temperature',
         copy_options=['csv', 'IGNOREHEADER 1']
     )
 
@@ -188,7 +177,6 @@ with DAG('etl',
     create_redshift_cluster_task >> create_redshift_connection_task >> create_tables_task
     create_tables_task >> [
         stage_airport_to_redshift_task, 
-        stage_temperature_to_redshift_task, 
         stage_cities_to_redshift_task, 
         stage_immigration_to_redshift_task,
         i94addrl_to_redshift_task,

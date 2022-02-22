@@ -26,17 +26,6 @@ class DataCleaner:
         return df_usa
 
 
-    def clean_temperature_data(df: pd.DataFrame) -> pd.DataFrame:
-        """ Cleans the temperature dataframe. """
-        # Filter out the NaN values for temperature
-        df_no_nan = df[~df['AverageTemperature'].isna()]
-
-        # Only gather the USA data
-        df_usa = df_no_nan[df_no_nan['Country'] == 'United States']
-
-        return df_usa
-
-
     def clean_cities_data(df: pd.DataFrame) -> pd.DataFrame:
         """ Cleans the cities dataframe. """
         # Convert population floats to ints
