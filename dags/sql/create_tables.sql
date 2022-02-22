@@ -66,33 +66,33 @@ CREATE TABLE IF NOT EXISTS public.staging_immigration (
 
 DROP TABLE IF EXISTS public.state_codes;
 CREATE TABLE IF NOT EXISTS public.state_codes (
-    code varchar(2),
-    "name" varchar(256)
+    state_code varchar(2),
+    state_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.country_codes;
 CREATE TABLE IF NOT EXISTS public.country_codes (
-    code int,
-    "name" varchar(256)
+    country_code int,
+    country_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.mode_codes;
 CREATE TABLE IF NOT EXISTS public.mode_codes (
-    code int,
-    "name" varchar(256)
+    mode_code int,
+    mode_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.airport_codes;
 CREATE TABLE IF NOT EXISTS public.airport_codes (
-    code varchar(3),
-    "name" varchar(256),
-    "state" varchar(256)
+    airtport_code varchar(3),
+    airport_name varchar(256),
+    state_code varchar(256)
 );
 
 DROP TABLE IF EXISTS public.visa_codes;
 CREATE TABLE IF NOT EXISTS public.visa_codes (
-    code int,
-    "name" varchar(256)
+    visa_code int,
+    visa_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.airports;

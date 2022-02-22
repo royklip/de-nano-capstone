@@ -41,9 +41,9 @@ class DataCleaner:
     def clean_i94prtl_data(df: pd.DataFrame) -> pd.DataFrame:
         """ Cleans the i94prtl dataframe. """
         # Split state from name
-        df[['name', 'state']] = df['name'].str.split(', ', expand=True)[[0, 1]]
+        df[['airport_name', 'state_code']] = df['airport_name'].str.split(', ', expand=True)[[0, 1]]
 
         # Strip additional whitespace
-        df['state'] = df['state'].str.strip()
+        df['state_code'] = df['state_code'].str.strip()
 
         return df

@@ -21,12 +21,13 @@ PATH_CLEAN = config.get('S3', 'PATH_CLEAN')
 file_airport = 'airport-codes_csv.csv'
 file_cities = 'us-cities-demographics.csv'
 
-txt_load_options = {
-    'header': None, 
-    'sep': '=', 
-    'names': ['code', 'name'], 
-    'quotechar': '\''
-}
+def _get_txt_load_options(category: str):
+    return {
+        'header': None, 
+        'sep': '=', 
+        'names': [f'{category}_code', f'{category}_name'], 
+        'quotechar': '\''
+    }
 
 
 with DAG('clean_csv_data',
@@ -67,16 +68,45 @@ with DAG('clean_csv_data',
         input_file=f'{PATH_RAW}/i94prtl.txt',
         output_file=f'{PATH_CLEAN}/i94prtl.csv',
         cleaning_function=DataCleaner.clean_i94prtl_data,
-        load_options=txt_load_options
+        load_options=_get_txt_load_options('airport')
     )
 
-    for txt_file in ['i94addrl', 'i94cntyl', 'i94model', 'i94visa']:
-        clean_txt_data_task = CleanDataOperator(
-            task_id=f'clean_{txt_file}_data',
-            aws_credentials_id=aws_credentials,
-            region=REGION,
-            bucket=BUCKET,
-            input_file=f'{PATH_RAW}/{txt_file}.txt',
-            output_file=f'{PATH_CLEAN}/{txt_file}.csv',
-            load_options=txt_load_options
-        )
+    clean_i94addrl_data_task = CleanDataOperator(
+        task_id=f'clean_i94addrl_data',
+        aws_credentials_id=aws_credentials,
+        region=REGION,
+        bucket=BUCKET,
+        input_file=f'{PATH_RAW}/i94addrl.txt',
+        output_file=f'{PATH_CLEAN}/i94addrl.csv',
+        load_options=_get_txt_load_options('state')
+    )
+
+    clean_i94cntyl_data_task = CleanDataOperator(
+        task_id=f'clean_i94cntyl_data',
+        aws_credentials_id=aws_credentials,
+        region=REGION,
+        bucket=BUCKET,
+        input_file=f'{PATH_RAW}/i94cntyl.txt',
+        output_file=f'{PATH_CLEAN}/i94cntyl.csv',
+        load_options=_get_txt_load_options('country')
+    )
+
+    clean_i94model_data_task = CleanDataOperator(
+        task_id=f'clean_i94model_data',
+        aws_credentials_id=aws_credentials,
+        region=REGION,
+        bucket=BUCKET,
+        input_file=f'{PATH_RAW}/i94model.txt',
+        output_file=f'{PATH_CLEAN}/i94model.csv',
+        load_options=_get_txt_load_options('mode')
+    )
+
+    clean_i94visa_data_task = CleanDataOperator(
+        task_id=f'clean_i94visa_data',
+        aws_credentials_id=aws_credentials,
+        region=REGION,
+        bucket=BUCKET,
+        input_file=f'{PATH_RAW}/i94visa.txt',
+        output_file=f'{PATH_CLEAN}/i94visa.csv',
+        load_options=_get_txt_load_options('visa')
+    )
