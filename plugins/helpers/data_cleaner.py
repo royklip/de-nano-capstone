@@ -54,4 +54,7 @@ class DataCleaner:
         # Split state from name
         df[['name', 'state']] = df['name'].str.split(', ', expand=True)[[0, 1]]
 
+        # Strip additional whitespace
+        df['state'] = df['state'].str.strip()
+
         return df
