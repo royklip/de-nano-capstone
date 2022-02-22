@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS public.staging_airport;
 CREATE TABLE IF NOT EXISTS public.staging_airport (
-    ident varchar(7) NOT NULL,
+    ident varchar(7) PRIMARY KEY,
     "type" varchar(256) NOT NULL,
     "name" varchar(256) NOT NULL,
     elevation_ft int,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.staging_cities (
 
 DROP TABLE IF EXISTS public.staging_immigration;
 CREATE TABLE IF NOT EXISTS public.staging_immigration (
-    cicid double precision,
+    cicid double precision PRIMARY KEY,
     i94yr double precision,
     i94mon double precision,
     i94cit double precision,
@@ -66,38 +66,38 @@ CREATE TABLE IF NOT EXISTS public.staging_immigration (
 
 DROP TABLE IF EXISTS public.state_codes;
 CREATE TABLE IF NOT EXISTS public.state_codes (
-    state_code varchar(2),
+    state_code varchar(2) SORTKEY PRIMARY KEY,
     state_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.country_codes;
 CREATE TABLE IF NOT EXISTS public.country_codes (
-    country_code int,
+    country_code int SORTKEY PRIMARY KEY,
     country_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.mode_codes;
 CREATE TABLE IF NOT EXISTS public.mode_codes (
-    mode_code int,
+    mode_code int SORTKEY PRIMARY KEY,
     mode_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.airport_codes;
 CREATE TABLE IF NOT EXISTS public.airport_codes (
-    airtport_code varchar(3),
+    airport_code varchar(3) SORTKEY PRIMARY KEY,
     airport_name varchar(256),
     state_code varchar(256)
 );
 
 DROP TABLE IF EXISTS public.visa_codes;
 CREATE TABLE IF NOT EXISTS public.visa_codes (
-    visa_code int,
+    visa_code int SORTKEY PRIMARY KEY,
     visa_name varchar(256)
 );
 
 DROP TABLE IF EXISTS public.airports;
 CREATE TABLE IF NOT EXISTS public.airports (
-    airport_id varchar(7) NOT NULL,
+    airport_id varchar(7) SORTKEY PRIMARY KEY,
     "type" varchar(256) NOT NULL,
     "name" varchar(256) NOT NULL,
     elevation_ft int,
@@ -114,8 +114,9 @@ CREATE TABLE IF NOT EXISTS public.airports (
 
 DROP TABLE IF EXISTS public.cities;
 CREATE TABLE IF NOT EXISTS public.cities (
+    city_id INT IDENTITY(0,1) PRIMARY KEY,
     city varchar(256) NOT NULL,
-    state_code varchar(2) NOT NULL,
+    state_code varchar(2) SORTKEY NOT NULL,
     median_age numeric(3,1) NOT NULL,
     male_pop int,
     female_pop int,
