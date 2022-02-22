@@ -6,7 +6,6 @@ from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOp
 from operators import (
     CreateRedshiftClusterOperator,
     CreateRedshiftConnectionOperator,
-    LoadDataOperator,
     DeleteRedshiftClusterOperator
 )
 
@@ -176,13 +175,6 @@ with DAG('etl',
         sql='sql/load_data.sql',
         postgres_conn_id='redshift'
     )
-
-    # load_user_dimension_table = LoadDataOperator(
-    #     task_id='Load_user_dim_table',
-    #     table='users',
-    #     sql_select=SqlQueries.user_table_insert,
-    #     redshift_conn_id='redshift'
-    # )
 
     delete_redshift_cluster_task = DeleteRedshiftClusterOperator(
         task_id='delete_redshift_cluster',
