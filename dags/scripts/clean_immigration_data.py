@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf
-from pyspark.sql.types import DateType
+from pyspark.sql.functions import udf, col
+from pyspark.sql.types import DateType, IntegerType
 
 import os
 import datetime
@@ -25,6 +25,10 @@ def main():
     # Convert SAS date numeric fields to datetime
     df_immigration = df_immigration.withColumn('arrdate', sas_to_dt('arrdate'))
     df_immigration = df_immigration.withColumn('depdate', sas_to_dt('depdate'))
+
+    # Cast double type columns to integer type
+    for column in ['cicid', 'i94yr', 'i94mon', 'i94cit', 'i94res', 'i94mode', 'i94bir', 'i94visa', 'count', 'biryear', 'admnum']:
+        df_immigration = df_immigration.withColumn(column, col(column).cast(IntegerType()))
 
     # Save data to parquet files on S3
     df_immigration.write.mode('overwrite').parquet(f's3a://{BUCKET}/{PATH_CLEAN}/immigration.parquet')

@@ -34,19 +34,19 @@ CREATE TABLE IF NOT EXISTS public.staging_cities (
 
 DROP TABLE IF EXISTS public.staging_immigration;
 CREATE TABLE IF NOT EXISTS public.staging_immigration (
-    cicid double precision PRIMARY KEY,
-    i94yr double precision,
-    i94mon double precision,
-    i94cit double precision,
-    i94res double precision,
+    cicid int PRIMARY KEY,
+    i94yr int,
+    i94mon int,
+    i94cit int,
+    i94res int,
     i94port varchar(256),
     arrdate date,
-    i94mode double precision,
+    i94mode int,
     i94addr varchar(256),
     depdate date,
-    i94bir double precision,
-    i94visa double precision,
-    "count" double precision,
+    i94bir int,
+    i94visa int,
+    "count" int,
     dtadfile varchar(256),
     visapost varchar(256),
     occup varchar(256),
@@ -54,12 +54,12 @@ CREATE TABLE IF NOT EXISTS public.staging_immigration (
     entdepd varchar(256),
     entdepu varchar(256),
     matflag varchar(256),
-    biryear double precision,
+    biryear int,
     dtaddto varchar(256),
     gender varchar(256),
     insnum varchar(256),
     airline varchar(256),
-    admnum double precision,
+    admnum int,
     fltno varchar(256),
     visatype varchar(256)
 );
@@ -126,4 +126,30 @@ CREATE TABLE IF NOT EXISTS public.cities (
     avg_household numeric(3,2),
     race varchar(256) NOT NULL,
     "count" int NOT NULL
+);
+
+DROP TABLE IF EXISTS public.immigration;
+CREATE TABLE IF NOT EXISTS public.immigration (
+    immigration_id int DISTKEY PRIMARY KEY,
+    "year" int,
+    "month" int,
+    cit_country_code int,
+    res_country_code int,
+    airport_code varchar(256),
+    arrdate date,
+    mode_code int,
+    airtport_state_code varchar(256),
+    depdate date,
+    age int,
+    visa_code int,
+    "count" int,
+    visapost varchar(256),
+    occup varchar(256),
+    biryear int,
+    gender varchar(256),
+    insnum varchar(256),
+    airline varchar(256),
+    admnum int,
+    fltno varchar(256),
+    visatype varchar(256)
 );

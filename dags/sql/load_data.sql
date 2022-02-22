@@ -37,3 +37,29 @@ INSERT INTO cities (city,
     stc.Race as race,
     stc."Count" as "count"
 FROM staging_cities stc;
+
+INSERT INTO immigration 
+SELECT
+    stm.cicid as immigration_id,
+    stm.i94yr as "year",
+    stm.i94mon as "month",
+    stm.i94cit as cit_country_code,
+    stm.i94res as res_country_code,
+    stm.i94port as airport_code,
+    stm.arrdate,
+    stm.i94mode as mode_code,
+    stm.i94addr as airtport_state_code,
+    stm.depdate,
+    stm.i94bir as age,
+    stm.i94visa as visa_code,
+    stm."count",
+    stm.visapost,
+    stm.occup,
+    stm.biryear,
+    stm.gender,
+    stm.insnum,
+    stm.airline,
+    stm.admnum,
+    stm.fltno,
+    stm.visatype
+FROM staging_immigration stm;
