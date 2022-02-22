@@ -111,3 +111,18 @@ CREATE TABLE IF NOT EXISTS public.airports (
 	lattitude numeric(18,0),
 	longitude numeric(18,0)
 );
+
+DROP TABLE IF EXISTS public.cities;
+CREATE TABLE IF NOT EXISTS public.cities (
+    city varchar(256) NOT NULL,
+    state_code varchar(2) NOT NULL,
+    median_age numeric(3,1) NOT NULL,
+    male_pop int,
+    female_pop int,
+    total_pop int NOT NULL,
+    nr_veterans int,
+    foreign_born varchar(256),
+    avg_household numeric(3,2),
+    race varchar(256) NOT NULL,
+    "count" int NOT NULL
+);

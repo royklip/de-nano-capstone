@@ -12,4 +12,18 @@ SELECT sta.ident as airport_id,
     sta.local_code,
 	sta.lattitude,
 	sta.longitude
-FROM staging_airport sta
+FROM staging_airport sta;
+
+INSERT INTO cities
+SELECT stc.City as city,
+    stc."State Code" as state_code,
+    stc."Median Age" as median_age,
+    stc."Male Population" as male_pop,
+    stc."Female Population" as female_pop,
+    stc."Total Population" as total_pop,
+    stc."Number of Veterans" as nr_veterans,
+    stc."Foreign-born" as foreign_born,
+    stc."Average Household Size" as avg_household,
+    stc.Race as race,
+    stc."Count" as "count"
+FROM staging_cities stc;
