@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS public.staging_airport (
     iata_code varchar(3),
     local_code varchar(7),
 	lattitude numeric(18,0),
-	longitude numeric(18,0)
+	longitude numeric(18,0),
+    "state" varchar(2)
 );
 
 DROP TABLE IF EXISTS public.staging_temperature;
@@ -96,11 +97,28 @@ DROP TABLE IF EXISTS public.airport_codes;
 CREATE TABLE IF NOT EXISTS public.airport_codes (
     code varchar(3),
     "name" varchar(256),
-    "state" varchar(2)
+    "state" varchar(256)
 );
 
 DROP TABLE IF EXISTS public.visa_codes;
 CREATE TABLE IF NOT EXISTS public.visa_codes (
     code int,
     "name" varchar(256)
+);
+
+DROP TABLE IF EXISTS public.airports;
+CREATE TABLE IF NOT EXISTS public.airports (
+    airport_id varchar(7) NOT NULL,
+    "type" varchar(256) NOT NULL,
+    "name" varchar(256) NOT NULL,
+    elevation_ft int,
+    continent varchar(2),
+    country_code varchar(2),
+    state_code varchar(7),
+    municipality varchar(256),
+    gps_code varchar(4),
+    airport_code varchar(3),
+    local_code varchar(7),
+	lattitude numeric(18,0),
+	longitude numeric(18,0)
 );
