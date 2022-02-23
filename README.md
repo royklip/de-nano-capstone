@@ -135,6 +135,32 @@ In the image above, the key icons represent primary keys, the three bars represe
 | mode_code | Travel mode code in 1 digit |
 | mode_name | Travel mode name            |
 
+## Test
+To check the usefulness of the database schema we have ran the following query to check if there is a correlation between household size and immigration count per state:
+```
+SELECT avg_household, immigration_count, ct.state_code
+FROM (
+  SELECT AVG(ct.avg_household) AS avg_household, ct.state_code
+  FROM cities ct, immigration im
+  GROUP BY state_code
+) AS ct
+JOIN (
+  SELECT COUNT(immigration_id) as immigration_count, airtport_state_code
+  FROM immigration
+  GROUP BY airtport_state_code
+) AS im ON ct.state_code=im.airtport_state_code
+ORDER BY immigration_count DESC
+LIMIT 5;
+```
+Which resulted in:
+| avg_household | immigration_count | state_code |
+|---------------|-------------------|------------|
+| 2.76          | 621701            | FL         |
+| 2.77          | 553677            | NY         |
+| 3.09          | 470386            | CA         |
+| 2.69          | 168764            | HI         |
+| 2.84          | 134321            | TX         |
+
 ## Scenarios
 #### *What if the data was increased by 100x?*
 Let's assume that this increase only applies to the immigration data, since the number of cities and airports will likely not increase. In this scenario Spark and Airflow will be our best friends. Spark can handle the 100x more data quite easily if we add an appropriate number of slave nodes to the EMR cluster. For loading the data in Redshift Airflow would need a schedule for running the ETL pipeline. This way we can load in the data bit by bit e.g., daily.
