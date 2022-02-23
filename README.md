@@ -36,12 +36,104 @@ Since all numeric values of CSV and SAS files are read as doubles, for every fil
 Not specifically during the cleaning phase, some columns are filtered from the immigration data as they are not required for the analysis goal.
 
 ### Data quality
-Two data quality checks are performed. One is to check if the tables are created correctly and the other one is to check if data exists in these tables indicating that the data loading is performed succesfully.
+Three data quality checks are performed. One is to check if the tables are created correctly, another one is to check if data exists in these tables indicating that the data loading is performed succesfully and the last one check the integrity constraints in the tables.
 
 ## Schema
 In the final schema the immigration table is a fact table while the others function as dimension tables. The `state_codes` table functions as the link between the immigration data and the airport and cities data. This way analysis between states based on immigration data can be performed, while airport and city data add extra information.
 
 ![DB schema](redshift.png)
+In the image above, the key icons represent primary keys, the three bars represent sort keys and the arrows represent foreign keys.
+
+### Data dictionary
+#### Immigration table
+| Column              | Description                                                |
+|---------------------|------------------------------------------------------------|
+| immigration_id      | ID                                                         |
+| year                | Year                                                       |
+| month               | Month                                                      |
+| cit_country_code    | Country of citizenship of the immigrant. Code of 3 digits. |
+| res_country_code    | Country of residency of the immigrant. Code of 3 digits.   |
+| airport_code        | Airport code in 3 chars                                    |
+| arrdate             | Arrival date                                               |
+| mode_code           | Travel mode code in 1 digit                                |
+| airtport_state_code | State where the airport is located. Code in 2 chars.       |
+| depdate             | Departure date                                             |
+| age                 | Age of the immigrant                                       |
+| visa_code           | Visa code in 1 digit                                       |
+| count               | Count, used for statistics                                 |
+| visapost            | Department of State where the visa was issued              |
+| occup               | Occupation that will be performed by the immigrant         |
+| biryear             | Birth year of the immigrant                                |
+| gender              | Gender of the immigrant                                    |
+| insnum              | INS number of the immigrant                                |
+| airline             | Airline that was used                                      |
+| admnum              | Admission number                                           |
+| fltno               | Flight number                                              |
+| visatype            | Visa type in 2 chars                                       |
+
+#### Airports table
+| Column       | Description                                       |
+|--------------|---------------------------------------------------|
+| airport_id   | ID                                                |
+| type         | Type                                              |
+| name         | Name                                              |
+| elevation_ft | Elevation in feet                                 |
+| continent    | Continent                                         |
+| country_code | Country code in 2 chars                           |
+| state_code   | State code in 2 chars                             |
+| municipality | Municipality                                      |
+| gps_code     | GPS code in 3 or 4 chars                          |
+| airport_code | IATA code in 3 chars                              |
+| local_code   | Local code in max 7 chars                         |
+| lattitude    | Latitude of the coordinates                       |
+| longitude    | Longitude of the coordinates                      |
+
+#### Cities table
+| Column        | Description                   |
+|---------------|-------------------------------|
+| city_id       | ID                            |
+| city          | Name                          |
+| state_code    | State code in 2 chars         |
+| median_age    | Median age                    |
+| male_pop      | Number of male population     |
+| female_pop    | Number of female population   |
+| total_pop     | Number of total population    |
+| nr_veterans   | Number of veterans            |
+| foreign_born  | Number of foreign born        |
+| avg_household | Average household size        |
+| race          | Race                          |
+| count         | Number of people of this race |
+
+#### State codes table
+| Column     | Description           |
+|------------|-----------------------|
+| state_code | State code in 2 chars |
+| state_name | State name            |
+
+#### Airport codes table
+| Column       | Description             |
+|--------------|-------------------------|
+| airport_code | Airport code in 3 chars |
+| airport_name | Airport name            |
+| state_code   | State code in 2 chars   |
+
+#### Country codes table
+| Column       | Description              |
+|--------------|--------------------------|
+| country_code | Country code in 3 digits |
+| country_name | Country name             |
+
+#### Visa codes table
+| Column    | Description          |
+|-----------|----------------------|
+| visa_code | Visa code in 1 digit |
+| visa_name | Visa type name       |
+
+#### Mode codes table
+| Column    | Description                 |
+|-----------|-----------------------------|
+| mode_code | Travel mode code in 1 digit |
+| mode_name | Travel mode name            |
 
 ## Scenarios
 #### *What if the data was increased by 100x?*
