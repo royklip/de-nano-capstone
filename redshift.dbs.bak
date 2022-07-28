@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Redshift" id="Project-24a" database="Redshift" >
+	<schema name="public" catalogname="capstone" >
+		<udt name="visa_codes" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="state_codes" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="staging_immigration" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="staging_cities" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="staging_airport" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="mode_codes" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="immigration" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="country_codes" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="cities" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="airports" udt_java_type="2002" udt_precision="NONE" />
+		<udt name="airport_codes" udt_java_type="2002" udt_precision="NONE" />
+		<table name="airport_codes" >
+			<column name="airport_code" type="varchar" length="3" decimal="0" jt="12" mandatory="y" />
+			<column name="airport_name" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="state_code" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="airport_codes_pkey" unique="PRIMARY_KEY" >
+				<column name="airport_code" />
+			</index>
+			<index name="Sorting" unique="UNIQUE_KEY" >
+				<column name="airport_code" />
+			</index>
+			<options><![CDATA[DISTSTYLE AUTO(ALL)]]></options>
+		</table>
+		<table name="airports" >
+			<column name="airport_id" type="varchar" length="7" decimal="0" jt="12" mandatory="y" />
+			<column name="type" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="name" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="elevation_ft" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="continent" type="varchar" length="2" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="country_code" type="varchar" length="2" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="state_code" type="varchar" length="7" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="municipality" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="gps_code" type="varchar" length="4" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="airport_code" type="varchar" length="3" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="local_code" type="varchar" length="7" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="lattitude" type="decimal" length="18" decimal="0" jt="3" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="longitude" type="decimal" length="18" decimal="0" jt="3" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<index name="Sorting" unique="SORT" options="COMPOUND" >
+				<column name="airport_id" />
+			</index>
+			<index name="airports_pkey" unique="PRIMARY_KEY" >
+				<column name="airport_id" />
+			</index>
+			<fk name="fk_airports_airport_codes" to_schema="capstone.public" to_table="airport_codes" >
+				<fk_column name="airport_code" pk="airport_code" />
+			</fk>
+			<fk name="fk_airports_state_codes" to_schema="capstone.public" to_table="state_codes" >
+				<fk_column name="state_code" pk="state_code" />
+			</fk>
+			<options><![CDATA[DISTSTYLE AUTO(EVEN)]]></options>
+		</table>
+		<table name="cities" >
+			<column name="city_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo><![CDATA["identity"(111073, 0, '0,1'::text)]]></defo>
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="city" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="state_code" type="varchar" length="2" decimal="0" jt="12" mandatory="y" />
+			<column name="median_age" type="decimal" length="3" decimal="1" jt="3" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="male_pop" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="female_pop" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="total_pop" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="nr_veterans" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="foreign_born" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="avg_household" type="decimal" length="3" decimal="2" jt="3" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="race" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="count" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<index name="Sorting" unique="SORT" options="COMPOUND" >
+				<column name="state_code" />
+			</index>
+			<index name="cities_pkey" unique="PRIMARY_KEY" >
+				<column name="city_id" />
+			</index>
+			<fk name="fk_cities_state_codes" to_schema="capstone.public" to_table="state_codes" >
+				<fk_column name="state_code" pk="state_code" />
+			</fk>
+			<options><![CDATA[DISTSTYLE AUTO(EVEN)]]></options>
+		</table>
+		<table name="country_codes" >
+			<column name="country_code" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="country_name" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="country_codes_pkey" unique="PRIMARY_KEY" >
+				<column name="country_code" />
+			</index>
+			<index name="Sorting" unique="UNIQUE_KEY" >
+				<column name="country_code" />
+			</index>
+			<options><![CDATA[DISTSTYLE AUTO(ALL)]]></options>
+		</table>
+		<table name="immigration" >
+			<column name="immigration_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="year" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="month" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="cit_country_code" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="res_country_code" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="airport_code" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="arrdate" type="date" length="13" decimal="0" jt="91" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="mode_code" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="airtport_state_code" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="depdate" type="date" length="13" decimal="0" jt="91" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="age" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="visa_code" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="count" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="visapost" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="occup" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="biryear" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="gender" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="insnum" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="airline" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="admnum" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="fltno" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="visatype" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="Distribution" unique="PARTITION" >
+				<column name="immigration_id" />
+			</index>
+			<index name="immigration_pkey" unique="PRIMARY_KEY" >
+				<column name="immigration_id" />
+			</index>
+			<fk name="fk_immigration_country_codes" to_schema="capstone.public" to_table="country_codes" >
+				<fk_column name="cit_country_code" pk="country_code" />
+			</fk>
+			<fk name="fk_immigration_country_codes_0" to_schema="capstone.public" to_table="country_codes" >
+				<fk_column name="res_country_code" pk="country_code" />
+			</fk>
+			<fk name="fk_immigration_state_codes" to_schema="capstone.public" to_table="state_codes" >
+				<fk_column name="airtport_state_code" pk="state_code" />
+			</fk>
+			<fk name="fk_immigration_airport_codes" to_schema="capstone.public" to_table="airport_codes" >
+				<fk_column name="airport_code" pk="airport_code" />
+			</fk>
+			<fk name="fk_immigration_visa_codes" to_schema="capstone.public" to_table="visa_codes" >
+				<fk_column name="visa_code" pk="visa_code" />
+			</fk>
+			<fk name="fk_immigration_mode_codes" to_schema="capstone.public" to_table="mode_codes" >
+				<fk_column name="mode_code" pk="mode_code" />
+			</fk>
+		</table>
+		<table name="mode_codes" >
+			<column name="mode_code" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="mode_name" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="mode_codes_pkey" unique="PRIMARY_KEY" >
+				<column name="mode_code" />
+			</index>
+			<index name="Sorting" unique="UNIQUE_KEY" >
+				<column name="mode_code" />
+			</index>
+			<options><![CDATA[DISTSTYLE AUTO(ALL)]]></options>
+		</table>
+		<table name="staging_airport" >
+			<column name="ident" type="varchar" length="7" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="type" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="name" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="elevation_ft" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="continent" type="varchar" length="2" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="iso_country" type="varchar" length="2" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="iso_region" type="varchar" length="7" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="municipality" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="gps_code" type="varchar" length="4" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="iata_code" type="varchar" length="3" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="local_code" type="varchar" length="7" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="lattitude" type="decimal" length="18" decimal="0" jt="3" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="longitude" type="decimal" length="18" decimal="0" jt="3" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="state" type="varchar" length="2" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="staging_airport_pkey" unique="PRIMARY_KEY" >
+				<column name="ident" />
+			</index>
+			<options><![CDATA[DISTSTYLE AUTO(EVEN)]]></options>
+		</table>
+		<table name="staging_cities" >
+			<column name="city" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="state" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="median age" type="decimal" length="3" decimal="1" jt="3" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="male population" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="female population" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="total population" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="number of veterans" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="foreign-born" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="average household size" type="decimal" length="3" decimal="2" jt="3" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="state code" type="varchar" length="2" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="race" type="varchar" length="256" decimal="0" jt="12" mandatory="y" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="count" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<options><![CDATA[DISTSTYLE AUTO(ALL)]]></options>
+		</table>
+		<table name="staging_immigration" >
+			<column name="cicid" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94yr" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94mon" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94cit" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94res" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94port" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="arrdate" type="date" length="13" decimal="0" jt="91" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94mode" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94addr" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="depdate" type="date" length="13" decimal="0" jt="91" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94bir" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="i94visa" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="count" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="dtadfile" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="visapost" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="occup" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="entdepa" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="entdepd" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="entdepu" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="matflag" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="biryear" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="dtaddto" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="gender" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="insnum" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="airline" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="admnum" type="integer" length="10" decimal="0" jt="4" >
+				<column_options><![CDATA[encode az64]]></column_options>
+			</column>
+			<column name="fltno" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<column name="visatype" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="staging_immigration_pkey" unique="PRIMARY_KEY" >
+				<column name="cicid" />
+			</index>
+			<options><![CDATA[DISTSTYLE AUTO(EVEN)]]></options>
+		</table>
+		<table name="state_codes" >
+			<column name="state_code" type="varchar" length="2" decimal="0" jt="12" mandatory="y" />
+			<column name="state_name" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="state_codes_pkey" unique="PRIMARY_KEY" >
+				<column name="state_code" />
+			</index>
+			<index name="Sorting" unique="UNIQUE_KEY" >
+				<column name="state_code" />
+			</index>
+			<options><![CDATA[DISTSTYLE AUTO(ALL)]]></options>
+		</table>
+		<table name="visa_codes" >
+			<column name="visa_code" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="visa_name" type="varchar" length="256" decimal="0" jt="12" >
+				<column_options><![CDATA[encode lzo]]></column_options>
+			</column>
+			<index name="visa_codes_pkey" unique="PRIMARY_KEY" >
+				<column name="visa_code" />
+			</index>
+			<index name="Sorting" unique="UNIQUE_KEY" >
+				<column name="visa_code" />
+			</index>
+			<options><![CDATA[DISTSTYLE AUTO(ALL)]]></options>
+		</table>
+	</schema>
+	<connector name="Redshift" database="Redshift" driver_class="com.amazon.redshift.jdbc42.Driver" driver_jar="redshift-jdbc42-2.1.0.3.jar" url="jdbc:redshift://roy-udacity-nanodegree.c51djjlqyw9s.eu-west-1.redshift.amazonaws.com:5439/capstone" host="localhost" port="5439" user="capstoneuser" passwd="Q2Fwc3RvbmUxIQ==" />
+	<layout name="Main Layout" id="Layout-1f5" show_relation="columns" >
+		<entity schema="capstone.public" name="airport_codes" color="BED3F4" x="272" y="96" />
+		<entity schema="capstone.public" name="airports" color="BED3F4" x="48" y="80" />
+		<entity schema="capstone.public" name="cities" color="BED3F4" x="256" y="464" />
+		<entity schema="capstone.public" name="country_codes" color="BED3F4" x="800" y="128" />
+		<entity schema="capstone.public" name="immigration" color="BED3F4" x="512" y="80" />
+		<entity schema="capstone.public" name="mode_codes" color="BED3F4" x="816" y="352" />
+		<entity schema="capstone.public" name="state_codes" color="BED3F4" x="272" y="272" />
+		<entity schema="capstone.public" name="visa_codes" color="BED3F4" x="816" y="240" />
+		<group name="immigration_data" color="ECF0F7" >
+			<entity schema="capstone.public" name="immigration" />
+			<entity schema="capstone.public" name="airport_codes" />
+			<entity schema="capstone.public" name="airports" />
+			<entity schema="capstone.public" name="visa_codes" />
+			<entity schema="capstone.public" name="mode_codes" />
+			<entity schema="capstone.public" name="country_codes" />
+			<entity schema="capstone.public" name="state_codes" />
+			<entity schema="capstone.public" name="cities" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-15ed" show_column_type="y" show_relation="columns" >
+		<entity schema="capstone.public" name="airport_codes" color="BED3F4" x="832" y="752" />
+		<entity schema="capstone.public" name="airports" color="BED3F4" x="48" y="752" />
+		<entity schema="capstone.public" name="cities" color="BED3F4" x="1104" y="752" />
+		<entity schema="capstone.public" name="country_codes" color="BED3F4" x="832" y="944" />
+		<entity schema="capstone.public" name="immigration" color="BED3F4" x="528" y="944" />
+		<entity schema="capstone.public" name="mode_codes" color="BED3F4" x="560" y="768" />
+		<entity schema="capstone.public" name="staging_airport" color="BED3F4" x="560" y="384" />
+		<entity schema="capstone.public" name="staging_cities" color="BED3F4" x="560" y="48" />
+		<entity schema="capstone.public" name="staging_immigration" color="BED3F4" x="320" y="160" />
+		<entity schema="capstone.public" name="state_codes" color="BED3F4" x="832" y="576" />
+		<entity schema="capstone.public" name="visa_codes" color="BED3F4" x="1104" y="576" />
+		<script name="SQL Editor" id="Editor-7e3" language="SQL" >
+			<string><![CDATA[SELECT airport_code, airport_name, state_code
+FROM
+	"public".airport_codes s;]]></string>
+		</script>
+		<browser id="Browse-1bae" name="Relational Data Explorer" confirm_updates="y" >
+			<browse_table schema="capstone.public" entity="airport_codes" x="20" y="20" width="400" height="300" />
+		</browser>
+		<query id="Query-b24" name="Query Builder" >
+			<query_table schema="capstone.public" name="airport_codes" alias="ac" x="48" y="48" >
+				<column name="airport_code" />
+				<column name="airport_name" />
+				<column name="state_code" />
+			</query_table>
+		</query>
+		<form name="Analytic Application" id="Report-c07" template="Page" css="container-fluid" view="frame" >
+			<var name="samplePageNumber" type="4" value="0" mandatory="n" />
+			<var name="sampleRecordsPerPage" type="4" value="100" mandatory="n" />
+			<body name="Body" template="Grid" pos="0,0,0,0,f,f" layout="{{-2,-2,-2,-2,-1},{-2,-2,-2,-2,-2}}" scroll="n" html="n" >
+				<cell type="label" name="Airport_codes Data" template="H3" pos="0,0,1,0,l,c" />
+				<cell type="label" name="Each cell may contain a component: label, chart, button, tableview. &#10;&lt;br&gt;Double-click cells to edit. Insert rows, columns or merge cells from the context menu." pos="0,1,3,1,l,c" />
+				<cell type="chart" name="Pie" template="Pie" pos="0,2,4,2,l,c" max_records="20" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="airport_code" />
+						<var name="airport_name" />
+						<var name="state_code" />
+						<script ><![CDATA[SELECT * FROM "public".airport_codes]]></script>
+					</form_script>
+					<param name="i0" value="airport_code" />
+					<param name="width" value="100%" />
+					<param name="title" value="Sample Chart" />
+					<param name="height" value="400px" />
+				</cell>
+				<tableview name="sample" template="Table" css="table table-striped table-sm table-hover" pos="0,3,4,3,f,f" layout="{{-2,-2,-2,-2},{-2,-2}}" scroll="n" html="n" header_rows="1" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="airport_code" />
+						<var name="airport_name" />
+						<var name="state_code" />
+						<script ><![CDATA[SELECT * FROM "public".airport_codes]]></script>
+					</form_script>
+					<cell type="label" name="airport_code" pos="0,0,0,0,c,c" />
+					<cell type="label" name="airport_name" pos="1,0,1,0,c,c" />
+					<cell type="label" name="state_code" pos="2,0,2,0,c,c" />
+					<cell type="label" name="Button can open other pages." pos="3,0,3,0,c,c" />
+					<cell type="label" name="${airport_code}" template="Plain" pos="0,1,0,1,l,c" />
+					<cell type="label" name="${airport_name}" template="Plain" pos="1,1,1,1,l,c" />
+					<cell type="label" name="${state_code}" template="Plain" pos="2,1,2,1,l,c" />
+					<cell type="button" name="More" template="Plain" css="btn btn-default btn-success" pos="3,1,3,1,c,c" ref_id="Report-c07" />
+				</tableview>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="0,4,0,4,l,c" glyph="FA-ANGLE_DOUBLE_LEFT" ref_id="Report-c07" >
+					<var name="samplePageNumber" value="0" />
+				</cell>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="1,4,1,4,l,c" glyph="FA-ANGLE_LEFT" ref_id="Report-c07" >
+					<var name="samplePageNumber" value="${Math.max(0,samplePageNumber-1)}" />
+				</cell>
+				<cell type="label" name="Page ${samplePageNumber+1}" pos="2,4,2,4,l,c" />
+				<cell type="href" name="" disabled="${!sampleHasNextPage}" pos="3,4,3,4,l,c" glyph="FA-ANGLE_RIGHT" ref_id="Report-c07" >
+					<var name="samplePageNumber" value="${( samplePageNumber+1 )}" />
+				</cell>
+			</body>
+		</form>
+	</layout>
+</project>

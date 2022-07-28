@@ -33,6 +33,7 @@ class DataCleaner:
         df['Female Population'] = _float_to_int(df['Female Population'])
         df['Total Population'] = _float_to_int(df['Total Population'])
         df['Number of Veterans'] = _float_to_int(df['Number of Veterans'])
+        df['Foreign-born'] = _float_to_int(df['Foreign-born'])
         df['Count'] = _float_to_int(df['Count'])
 
         return df
